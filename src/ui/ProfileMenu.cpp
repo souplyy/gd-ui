@@ -79,7 +79,7 @@ bool gdui::ProfileMenu::init(MenuLayer* owner,float width,float height) {
     auto button=CCMenuItemSprite::create(trigger(height,false),trigger(height,true),this,menu_selector(ProfileMenu::toggle));
     button->setPosition({width-49,height/2}); controls->addChild(button); addChild(controls);
     m_panel=CCNode::create(); m_panel->setContentSize({132,88});
-    m_panelHome={width-138,-90}; m_panel->setPosition(m_panelHome); m_panel->setVisible(false); addChild(m_panel,1);
+    m_panelHome=CCPoint{width-138,-90}; m_panel->setPosition(m_panelHome); m_panel->setVisible(false); addChild(m_panel,1);
     m_panel->addChild(roundedBox(132,88,8,"#16191f",true));
     auto name=CCLabelBMFont::create(username().c_str(),"bigFont.fnt");
     name->limitLabelWidth(112,.24f,.12f); name->setAnchorPoint({0,.5f}); name->setPosition({10,73}); m_panel->addChild(name);
