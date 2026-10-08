@@ -79,8 +79,8 @@ See [Geode reference notes](docs/geode-reference.md) for the documentation basel
 
 ## Live UI development
 
-The bar is now 15 logical units tall (previously 44), with an 11-unit Phosphor
-settings icon. Phosphor is the project's icon system; SVG source and the full
+The bar is now 15 logical units tall (previously 44), with an 11-unit Lucide
+settings icon. Lucide is the project's icon system; SVG source and the full
 license ship in `resources/icons`.
 
 After loading this version once, geometry, colors, spacing, and the settings
@@ -104,4 +104,4 @@ To replace an icon, retain its official SVG in resources/icons/settings.svg,
 install `@resvg/resvg-js` in your development Node environment, and run
 `node scripts/render-icon.cjs`. This exports the original curves at 512×512,
 updates the icon revision, and lets the watcher publish the icon and UI data.
-The game needs no Node dependencies. Phosphor's MIT license ships with the mod.
+The game needs no Node dependencies. Lucide's MIT license ships with the mod.

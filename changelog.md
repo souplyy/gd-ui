@@ -1,5 +1,8 @@
 # Unreleased
 
+- Restore the original Lucide Settings SVG.
+- Enable linear texture filtering and mipmaps for smooth small icon rendering.
+
 - Make the top bar 15 units tall.
 - Replace Lucide with the full-resolution Phosphor Gear Six icon.
 

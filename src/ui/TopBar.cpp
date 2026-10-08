@@ -90,6 +90,13 @@ bool gdui::TopBar::apply(std::string const& content) {
         m_owner, menu_selector(MenuLayer::onOptions)
     );
     if (!settings) return false;
+    // GD's pixel-art defaults are unsuitable for a small vector-derived icon.
+    // Filter after sprite creation, and use mipmaps when shrinking the 512px
+    // original so thin SVG strokes do not fall between texture samples.
+    texture->generateMipmap();
+    ccTexParams filtering = {GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR,
+                             GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE};
+    texture->setTexParameters(&filtering);
     auto size = CCDirector::sharedDirector()->getWinSize();
     controls->setID("top-bar-controls"_spr);
     controls->setPosition({0.f, 0.f});

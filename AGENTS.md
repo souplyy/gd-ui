@@ -2,7 +2,7 @@
 
 - Always host any previews locally. Never use ChatGPT Sites.
 - Develop one interface component at a time, as requested by the user.
-- Use Phosphor for all new UI icons. Keep official SVG source and license under
+- Use Lucide for all new UI icons. Keep official SVG source and license under
   resources/icons. Never replace these with hand-drawn approximations. Render exact SVG assets at 512 px using
   scripts/render-icon.cjs; retain their full curves and transparency.
 - Prefer resources/ui.json for supported style, layout, and icon edits. Publish
