@@ -1,3 +1,6 @@
+# this is lwk a work in progress, all test ui, nothing final (basically 0 final) please dont download this unless your helping cuz itll crash quite often
+
+
 # GD UI
 
 A native Geometry Dash mod foundation using **Geode 5.10.1**, **GD 2.2081**,
