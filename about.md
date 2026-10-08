@@ -1,9 +1,7 @@
 # GD UI
 
-A starting point for a fresh Geometry Dash interface.
+A fresh Geometry Dash interface, built one component at a time.
 
-This development build adds a cyan info button to the main menu. Click it to
-open the GD UI popup. Disable **Enable GD UI** in the mod settings and restart
-to hide the button.
-
-The full interface redesign is still to come.
+This development build adds a dark top bar to the main menu. Its top-left
+settings button opens Geometry Dash settings. Disable **Enable GD UI** and
+restart to restore the original menu.

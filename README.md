@@ -3,8 +3,8 @@
 A native Geometry Dash mod foundation using **Geode 5.10.1**, **GD 2.2081**,
 and **C++23**. Mod ID: `souplyy.gd-ui`.
 
-This starter adds a cyan info button to the main menu's shared bottom menu.
-Click it to open a small GD UI popup. The enable setting takes effect after a
+The first interface component is a full-width charcoal top bar on the main menu.
+Its custom pale gear at the top-left opens Geometry Dash settings. The enable setting takes effect after a
 restart. The full interface redesign is future work.
 
 ## Local setup
@@ -50,8 +50,8 @@ the full Xcode iPhone SDK and `geode build -p ios`.
 | --- | --- |
 | `mod.json` | Identity, supported versions, dependencies, settings |
 | `src/main.cpp` | Mod-loaded entry point and logging |
-| `src/hooks/MenuLayer.cpp` | Calls original menu initialization, adds our button |
-| `src/ui/StarterPopup.*` | Native Geode popup with standard close handling |
+| `src/hooks/MenuLayer.cpp` | Calls original menu initialization, adds the top bar |
+| `src/ui/TopBar.*` | Dark top bar, custom gear, and settings control |
 | `CMakeLists.txt` | C++23 library and Geode package generation |
 | `.github/workflows/build.yml` | Builds for Windows, macOS, Android, and iOS |
 
@@ -66,9 +66,9 @@ when pointers need to outlive the immediate call.
 A successful compilation does not establish in-game compatibility. Test these
 flows on the target platform before release:
 
-- Start GD and open/close the GD UI popup using its button, close control, and Escape/back.
-- Leave the main menu and return; check that only one GD UI button appears.
-- Disable the setting, restart, and confirm the button is hidden; re-enable and restart.
+- Start GD and open/close settings using the top-left gear and Escape/back.
+- Leave the main menu and return; check that only one top bar appears.
+- Disable the setting, restart, and confirm the top bar is hidden; re-enable and restart.
 - Check smaller aspect ratios and coexistence with other menu mods.
 
 The GitHub workflow uploads build artifacts; it does not publish releases or

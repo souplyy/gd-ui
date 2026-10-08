@@ -18,7 +18,7 @@ endif()
 add_library(${PROJECT_NAME} SHARED
     src/main.cpp
     src/hooks/MenuLayer.cpp
-    src/ui/StarterPopup.cpp
+    src/ui/TopBar.cpp
 )
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 add_subdirectory("$ENV{GEODE_SDK}" "${CMAKE_CURRENT_BINARY_DIR}/geode")

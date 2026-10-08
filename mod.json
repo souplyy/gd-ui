@@ -18,7 +18,7 @@
     "settings": {
         "enabled": {
             "name": "Enable GD UI",
-            "description": "Show the GD UI button on the main menu. Restart the game after changing this setting.",
+            "description": "Show the custom top bar on the main menu. Restart the game after changing this setting.",
             "type": "bool",
             "default": true,
             "requires-restart": true
