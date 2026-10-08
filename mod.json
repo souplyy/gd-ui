@@ -44,7 +44,8 @@
             "resources/icons/shirt.svg",
             "resources/icons/chart-no-axes-column.svg",
             "resources/icons/trophy.svg",
-            "resources/icons/compass.svg"
+            "resources/icons/compass.svg",
+            "resources/icons/chevron-down.svg"
         ]
     }
 }

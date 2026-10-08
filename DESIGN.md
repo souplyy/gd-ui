@@ -24,3 +24,13 @@ Each sector activates the existing native menu item; hide only the five original
 buttons in new mode, restore their original visibility in OG mode.
 Touch areas follow the annulus precisely, cancel when dragging out, and defer
 to modal dialogs. No frame hook or scheduled radial-menu callback.
+
+## Profile dropdown
+
+The top-right 100-unit trigger shows the equipped cube, player name, and Lucide
+chevron inside the existing 15-unit bar. A 156 by 110-unit charcoal panel drops
+below it, with a name header and View Profile, Icon Kit, and Account actions.
+Use the native GD destinations. Outside clicks dismiss and are consumed.
+Modal dialogs take priority; live top-bar rebuilds wait while the dropdown or
+a profile touch is active. Reference: local GD Lazer account-card interaction,
+with original compact styling and implementation for GD UI.

@@ -22,6 +22,7 @@ add_library(${PROJECT_NAME} SHARED
     src/ui/SvgIcon.cpp
     src/ui/UIToggle.cpp
     src/ui/RadialMenu.cpp
+    src/ui/ProfileMenu.cpp
 )
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 add_subdirectory("$ENV{GEODE_SDK}" "${CMAKE_CURRENT_BINARY_DIR}/geode")

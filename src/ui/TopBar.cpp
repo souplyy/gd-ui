@@ -1,5 +1,6 @@
 #include "TopBar.hpp"
 #include "SvgIcon.hpp"
+#include "ProfileMenu.hpp"
 
 #include <Geode/utils/file.hpp>
 #include <cmath>
@@ -106,6 +107,8 @@ bool gdui::TopBar::apply(std::string const& content) {
     settings->setPosition({left + button / 2.f, height / 2.f});
     controls->addChild(settings);
 
+    auto profile = ProfileMenu::create(m_owner, size.width, height);
+    if (!profile) return false;
     removeAllChildrenWithCleanup(true);
     m_height = height;
     setColor({background.r, background.g, background.b});
@@ -115,6 +118,7 @@ bool gdui::TopBar::apply(std::string const& content) {
     line->setID("divider"_spr);
     addChild(line);
     addChild(controls);
+    addChild(profile, 2);
     m_controls = controls;
     return true;
 }
@@ -140,6 +144,7 @@ bool gdui::TopBar::init(MenuLayer* menuLayer) {
 void gdui::TopBar::refresh(float) {
     // Do not register new controls above an active popup's touch priority.
     if (CCDirector::sharedDirector()->getTouchDispatcher()->isUsingForcePrio()) return;
+    if (auto profile = typeinfo_cast<ProfileMenu*>(getChildByID("profile-dropdown"_spr)); profile && profile->isBusy()) return;
     if (m_controls && static_cast<TopBarMenu*>(m_controls)->tracking()) return;
     auto content = file::readString(Mod::get()->getConfigDir() / "ui.json");
     auto size = CCDirector::sharedDirector()->getWinSize();
