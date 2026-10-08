@@ -1,10 +1,12 @@
 #include "UIToggle.hpp"
+#include "RadialMenu.hpp"
 #include <Geode/ui/OverlayManager.hpp>
 using namespace geode::prelude;
 
 namespace {
     void applyMode(CCNode* node, bool enabled) {
         if (!node) return;
+        if (auto radial = typeinfo_cast<gdui::RadialMenu*>(node)) radial->setMode(enabled);
         if (node->getID() == "top-bar"_spr) node->setVisible(enabled);
         if (auto children = node->getChildren())
             for (auto child : CCArrayExt<CCNode*>(children)) applyMode(child, enabled);

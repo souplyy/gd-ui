@@ -3,6 +3,7 @@
 
 #include "ui/TopBar.hpp"
 #include "ui/UIToggle.hpp"
+#include "ui/RadialMenu.hpp"
 
 using namespace geode::prelude;
 
@@ -18,6 +19,8 @@ class $modify(GDUIMenuLayer, MenuLayer) {
             addChild(bar, 100);
         }
         else log::warn("Unable to create the GD UI top bar");
+        if (auto radial = gdui::RadialMenu::create(this)) addChild(radial, 99);
+        else log::warn("Keeping original menu: radial menu could not be built");
         return true;
     }
 };

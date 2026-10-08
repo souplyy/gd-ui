@@ -19,7 +19,7 @@ float gdui::screenPixelScale() {
 }
 
 CCTexture2D* gdui::renderSvg(std::string source, int pixels) {
-    if (source.size() > 65536 || pixels < 8 || pixels > 512) return nullptr;
+    if (source.size() > 65536 || pixels < 8 || pixels > 2048) return nullptr;
     size_t position = 0;
     while ((position = source.find("currentColor", position)) != std::string::npos)
         source.replace(position, 12, "#ffffff");

@@ -39,7 +39,12 @@
             "resources/ui.json",
             "resources/icons/LICENSE",
             "resources/icons/settings.svg",
-            "resources/icons/settings.png"
+            "resources/icons/settings.png",
+            "resources/icons/play.svg",
+            "resources/icons/shirt.svg",
+            "resources/icons/chart-no-axes-column.svg",
+            "resources/icons/trophy.svg",
+            "resources/icons/compass.svg"
         ]
     }
 }

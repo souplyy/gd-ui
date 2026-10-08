@@ -13,3 +13,14 @@ A single Geode OverlayManager control stays at the bottom right across scenes.
 It is 108 by 32 units with an opaque dark fill, cyan border, and white
 USE OG UI / USE NEW UI label naming the destination. It stores the chosen mode
 and switches the top bar immediately. No per-frame hook or polling is used.
+
+## Main menu
+
+Mode: Operate. Center the equipped cube in a charcoal circular medallion.
+Surround it with five contiguous 72-degree annular sectors, flat dark slate
+fills and thin slate outlines. Counterclockwise from the top: Play, Icons,
+Stats, Achievements, Browse. Use Lucide SVG glyphs and horizontal labels.
+Each sector activates the existing native menu item; hide only the five original
+buttons in new mode, restore their original visibility in OG mode.
+Touch areas follow the annulus precisely, cancel when dragging out, and defer
+to modal dialogs. No frame hook or scheduled radial-menu callback.
