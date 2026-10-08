@@ -11,10 +11,20 @@
     "version": "v0.1.0",
     "developer": "souplyy",
     "description": "The foundation for a fresh Geometry Dash interface.",
-    "links": { "source": "https://github.com/souplyy/gd-ui" },
-    "issues": { "url": "https://github.com/souplyy/gd-ui/issues" },
-    "tags": ["interface", "offline"],
-    "dependencies": { "geode.node-ids": ">=v1.23.3" },
+    "links": {
+        "source": "https://github.com/souplyy/gd-ui"
+    },
+    "issues": {
+        "url": "https://github.com/souplyy/gd-ui/issues",
+        "info": "Report bugs on the GD UI GitHub issue tracker."
+    },
+    "tags": [
+        "interface",
+        "offline"
+    ],
+    "dependencies": {
+        "geode.node-ids": ">=v1.23.3"
+    },
     "settings": {
         "enabled": {
             "name": "Enable GD UI",
