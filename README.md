@@ -100,8 +100,8 @@ and publish it instead of rebuilding when the desired change is supported by
 its fields. Native C++ code, hooks, and new functionality still require a game
 restart: this does not hot-swap a loaded native library.
 
-To replace an icon, retain its official SVG in resources/icons/settings.svg,
-install `@resvg/resvg-js` in your development Node environment, and run
-`node scripts/render-icon.cjs`. This exports the original curves at 512×512,
-updates the icon revision, and lets the watcher publish the icon and UI data.
-The game needs no Node dependencies. Lucide's MIT license ships with the mod.
+To replace the settings icon, update its original SVG in
+`resources/icons/settings.svg`. The watcher publishes that file and its hash;
+the native NanoSVG renderer converts the original curves to exactly the icon's
+framebuffer pixel size. No fixed 512px image or mipmap downscaling is used.
+The icon is pixel-aligned and regenerates when the screen resolution changes.

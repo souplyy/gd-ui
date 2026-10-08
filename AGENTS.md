@@ -3,8 +3,9 @@
 - Always host any previews locally. Never use ChatGPT Sites.
 - Develop one interface component at a time, as requested by the user.
 - Use Lucide for all new UI icons. Keep official SVG source and license under
-  resources/icons. Never replace these with hand-drawn approximations. Render exact SVG assets at 512 px using
-  scripts/render-icon.cjs; retain their full curves and transparency.
+  resources/icons. Render the original SVG at the actual framebuffer pixel size
+  using the native NanoSVG renderer. Never approximate icons or shrink a fixed
+  large texture. Pixel-align the icon and retain its native antialiased coverage.
 - Prefer resources/ui.json for supported style, layout, and icon edits. Publish
   live changes with scripts/publish-ui.py; keep its watch process active during
   local UI iteration. Native C++ and hook changes still require restarting GD.

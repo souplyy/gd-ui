@@ -15,6 +15,7 @@ namespace gdui {
         MenuLayer* m_owner = nullptr; // Parent owns this bar.
         cocos2d::CCMenu* m_controls = nullptr;
         std::string m_lastContent;
+        std::string m_lastResolution;
         float m_height = 15.f;
     };
 }

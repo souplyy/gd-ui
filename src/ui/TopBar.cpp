@@ -1,4 +1,5 @@
 #include "TopBar.hpp"
+#include "SvgIcon.hpp"
 
 #include <Geode/utils/file.hpp>
 #include <cmath>
@@ -43,15 +44,21 @@ namespace {
     }
 
     CCNode* settingsImage(float buttonSize, float iconSize, ccColor4B background,
-                          ccColor4B foreground, CCTexture2D* texture) {
+                          ccColor4B foreground, CCTexture2D* texture, CCPoint origin) {
         auto image = CCNode::create();
         image->setContentSize({buttonSize, buttonSize});
         image->addChild(CCLayerColor::create(background, buttonSize, buttonSize));
         auto icon = CCSprite::createWithTexture(texture);
         if (!icon) return nullptr;
         icon->setColor({foreground.r, foreground.g, foreground.b});
-        icon->setScale(iconSize / icon->getContentSize().width);
-        icon->setPosition({buttonSize / 2.f, buttonSize / 2.f});
+        auto scale = gdui::screenPixelScale();
+        auto displaySize = texture->getPixelsWide() / scale;
+        icon->setScale(displaySize / icon->getContentSize().width);
+        auto offset = (buttonSize - displaySize) / 2.f;
+        icon->setPosition({std::round((origin.x + offset) * scale) / scale - origin.x + displaySize / 2.f,
+                           std::round((origin.y + offset) * scale) / scale - origin.y + displaySize / 2.f});
+        icon->setOpacityModifyRGB(false);
+        icon->setBlendFunc({GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA});
         image->addChild(icon);
         return image;
     }
@@ -71,33 +78,27 @@ bool gdui::TopBar::apply(std::string const& content) {
         !color(config["background"], background) || !color(config["pressed"], pressed) ||
         !color(config["foreground"], foreground) || !color(config["divider"], divider)) return false;
 
-    auto iconPath = Mod::get()->getConfigDir() / "settings.png";
+    auto iconPath = Mod::get()->getConfigDir() / "settings.svg";
     std::error_code error;
     if (!std::filesystem::exists(iconPath, error))
-        iconPath = Mod::get()->getResourcesDir() / "settings.png";
-    auto filename = string::pathToString(iconPath);
-    auto cache = CCTextureCache::sharedTextureCache();
-    cache->removeTextureForKey(filename.c_str());
-    auto texture = cache->addImage(filename.c_str(), true);
+        iconPath = Mod::get()->getResourcesDir() / "settings.svg";
+    auto svg = file::readString(iconPath);
+    if (!svg) return false;
+    auto pixels = static_cast<int>(std::round(icon * gdui::screenPixelScale()));
+    auto texture = gdui::renderSvg(svg.unwrap(), pixels);
     if (!texture) return false;
+    auto size = CCDirector::sharedDirector()->getWinSize();
+    CCPoint origin{left, size.height - height + (height - button) / 2.f};
 
     // Build the replacement before removing the working controls.
     auto controls = TopBarMenu::create();
     if (!controls) return false;
     auto settings = CCMenuItemSprite::create(
-        settingsImage(button, icon, background, foreground, texture),
-        settingsImage(button, icon, pressed, foreground, texture),
+        settingsImage(button, icon, background, foreground, texture, origin),
+        settingsImage(button, icon, pressed, foreground, texture, origin),
         m_owner, menu_selector(MenuLayer::onOptions)
     );
     if (!settings) return false;
-    // GD's pixel-art defaults are unsuitable for a small vector-derived icon.
-    // Filter after sprite creation, and use mipmaps when shrinking the 512px
-    // original so thin SVG strokes do not fall between texture samples.
-    texture->generateMipmap();
-    ccTexParams filtering = {GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR,
-                             GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE};
-    texture->setTexParameters(&filtering);
-    auto size = CCDirector::sharedDirector()->getWinSize();
     controls->setID("top-bar-controls"_spr);
     controls->setPosition({0.f, 0.f});
     controls->setContentSize({size.width, height});
@@ -141,7 +142,10 @@ void gdui::TopBar::refresh(float) {
     if (CCDirector::sharedDirector()->getTouchDispatcher()->isUsingForcePrio()) return;
     if (m_controls && static_cast<TopBarMenu*>(m_controls)->tracking()) return;
     auto content = file::readString(Mod::get()->getConfigDir() / "ui.json");
-    if (!content || content.unwrap() == m_lastContent) return;
+    auto size = CCDirector::sharedDirector()->getWinSize();
+    auto resolution = fmt::format("{}:{}:{}", size.width, size.height, gdui::screenPixelScale());
+    if (!content || (content.unwrap() == m_lastContent && resolution == m_lastResolution)) return;
+    m_lastResolution = resolution;
     m_lastContent = content.unwrap();
     if (apply(m_lastContent)) log::info("Live UI refreshed");
     else log::warn("Invalid live UI config; keeping the previous top bar");
