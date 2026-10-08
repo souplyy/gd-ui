@@ -2,6 +2,7 @@
 #include "SvgIcon.hpp"
 #include <Geode/utils/file.hpp>
 #include <cmath>
+#include <algorithm>
 using namespace geode::prelude;
 namespace {
 class ProfileControls final : public CCMenu {
@@ -36,31 +37,43 @@ CCNode* roundedBox(float width, float height, float radius, char const* fill, bo
     }
     return node;
 }
-CCNode* row(char const* text, float width, float height, bool pressed) {
+CCSprite* glyph(char const* name, float size) {
+    auto source = file::readString(Mod::get()->getResourcesDir()/(std::string(name)+".svg"));
+    if (!source) return nullptr;
+    auto texture = gdui::renderSvg(source.unwrap(), int(std::round(size*gdui::screenPixelScale())));
+    if (!texture) return nullptr;
+    auto sprite = CCSprite::createWithTexture(texture);
+    sprite->setScale(size/sprite->getContentSize().width);
+    sprite->setColor({209,219,232}); sprite->setOpacityModifyRGB(false);
+    sprite->setBlendFunc({GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA});
+    return sprite;
+}
+CCNode* row(char const* text, float width, float height, bool pressed, char const* icon=nullptr) {
     auto node = roundedBox(width,height,4,pressed ? "#303742" : "#16191f");
     auto label = CCLabelBMFont::create(text,"bigFont.fnt");
     label->setColor({209,219,232}); label->setScale(.19f);
-    label->setAnchorPoint({0,.5f}); label->setPosition({9,height/2}); node->addChild(label);
+    label->setAnchorPoint({0,.5f}); label->setPosition({icon ? 23.f : 9.f,height/2}); node->addChild(label);
+    if (icon) if (auto sprite=glyph(icon,9)) { sprite->setPosition({11,height/2}); node->addChild(sprite); }
     return node;
 }
 std::string username() {
     auto name = std::string(GameManager::sharedState()->m_playerName);
     return name.empty() ? "Player" : name;
 }
-CCNode* trigger(float height, bool pressed) {
-    auto node = row("",86,height-2,pressed);
+CCNode* trigger(float height, float width, bool pressed) {
+    auto node = row("",width,height-2,pressed);
     auto gm = GameManager::sharedState();
     auto avatar = SimplePlayer::create(gm->getPlayerFrame());
     avatar->setColor(gm->colorForIdx(gm->getPlayerColor()));
     avatar->setSecondColor(gm->colorForIdx(gm->getPlayerColor2()));
     avatar->setScale(.27f); avatar->setPosition({9,height/2}); node->addChild(avatar);
     auto label = CCLabelBMFont::create(username().c_str(),"bigFont.fnt");
-    label->limitLabelWidth(50,.2f,.1f); label->setAnchorPoint({0,.5f});
+    label->limitLabelWidth(width-34,.2f,.1f); label->setAnchorPoint({0,.5f});
     label->setPosition({20,height/2}); label->setColor({209,219,232}); node->addChild(label);
     auto svg = file::readString(Mod::get()->getResourcesDir()/"chevron-down.svg");
     if (svg) if (auto texture = gdui::renderSvg(svg.unwrap(),int(std::round(7*gdui::screenPixelScale())))) {
         auto icon = CCSprite::createWithTexture(texture);
-        icon->setScale(7/icon->getContentSize().width); icon->setPosition({79,height/2});
+        icon->setScale(7/icon->getContentSize().width); icon->setPosition({width-7,height/2});
         icon->setColor({209,219,232}); icon->setOpacityModifyRGB(false);
         icon->setBlendFunc({GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA}); node->addChild(icon);
     }
@@ -76,20 +89,32 @@ bool gdui::ProfileMenu::init(MenuLayer* owner,float width,float height) {
     if (!CCLayer::init()) return false;
     m_owner=owner; setID("profile-dropdown"_spr); setPosition({0,0});
     auto controls=ProfileControls::create(); m_triggerControls=controls;
-    auto button=CCMenuItemSprite::create(trigger(height,false),trigger(height,true),this,menu_selector(ProfileMenu::toggle));
-    button->setPosition({width-49,height/2}); controls->addChild(button); addChild(controls);
-    m_panel=CCNode::create(); m_panel->setContentSize({132,88});
-    m_panelHome=CCPoint{width-138,-90}; m_panel->setPosition(m_panelHome); m_panel->setVisible(false); addChild(m_panel,1);
-    m_panel->addChild(roundedBox(132,88,8,"#16191f",true));
+    auto measure=CCLabelBMFont::create(username().c_str(),"bigFont.fnt");
+    float triggerWidth=std::clamp(measure->getContentSize().width*.2f+34.f,46.f,78.f);
+    auto button=CCMenuItemSprite::create(trigger(height,triggerWidth,false),trigger(height,triggerWidth,true),this,menu_selector(ProfileMenu::toggle));
+    button->setPosition({width-6-triggerWidth/2,height/2}); controls->addChild(button); addChild(controls);
+    m_panel=CCNode::create(); m_panel->setContentSize({84,90});
+    m_panelHome=CCPoint{width-90,-92}; m_panel->setPosition(m_panelHome); m_panel->setVisible(false); addChild(m_panel,1);
+    m_panel->addChild(roundedBox(84,90,7,"#16191f",true));
+    auto gm=GameManager::sharedState();
+    auto tint=gm->colorForIdx(gm->getPlayerColor());
+    auto headerColor=fmt::format("#{:02x}{:02x}{:02x}",int(22*.82f+tint.r*.18f),int(25*.82f+tint.g*.18f),int(31*.82f+tint.b*.18f));
+    auto header=roundedBox(80,28,5,headerColor.c_str()); header->setPosition({2,60}); m_panel->addChild(header);
+    auto avatar=SimplePlayer::create(gm->getPlayerFrame());
+    avatar->setColor(tint); avatar->setSecondColor(gm->colorForIdx(gm->getPlayerColor2()));
+    avatar->setScale(.48f); avatar->setPosition({14,74}); m_panel->addChild(avatar);
     auto name=CCLabelBMFont::create(username().c_str(),"bigFont.fnt");
-    name->limitLabelWidth(112,.24f,.12f); name->setAnchorPoint({0,.5f}); name->setPosition({10,73}); m_panel->addChild(name);
-    auto line=CCLayerColor::create({70,84,99,255},112,.5f); line->setPosition({10,60}); m_panel->addChild(line);
+    name->limitLabelWidth(48,.2f,.08f); name->setAnchorPoint({0,.5f}); name->setPosition({28,77}); m_panel->addChild(name);
+    auto caption=CCLabelBMFont::create("Your account","bigFont.fnt");
+    caption->setScale(.105f); caption->setColor({170,190,204}); caption->setAnchorPoint({0,.5f});
+    caption->setPosition({28,68}); m_panel->addChild(caption);
     auto items=ProfileControls::create(); m_panelControls=items; m_panel->addChild(items);
-    char const* labels[]={"View Profile","Icon Kit","Account"};
+    char const* labels[]={"Profile","Icon Kit","Account"};
+    char const* rowIcons[]={"user-round","shirt","settings"};
     SEL_MenuHandler actions[]={menu_selector(ProfileMenu::profile),menu_selector(ProfileMenu::icons),menu_selector(ProfileMenu::account)};
     for(int i=0;i<3;++i) {
-        auto item=CCMenuItemSprite::create(row(labels[i],120,18,false),row(labels[i],120,18,true),this,actions[i]);
-        item->setPosition({66,48.f-19*i}); items->addChild(item);
+        auto item=CCMenuItemSprite::create(row(labels[i],76,17,false,rowIcons[i]),row(labels[i],76,17,true,rowIcons[i]),this,actions[i]);
+        item->setPosition({42,48.f-18*i}); items->addChild(item);
     }
     setTouchEnabled(true); return true;
 }

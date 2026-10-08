@@ -27,9 +27,9 @@ to modal dialogs. No frame hook or scheduled radial-menu callback.
 
 ## Profile dropdown
 
-The top-right 86-unit trigger shows the equipped cube, player name, and Lucide
-chevron inside the existing 15-unit bar. A 132 by 88-unit charcoal panel drops
-below it, with a name header and View Profile, Icon Kit, and Account actions.
+The top-right trigger sized to its username (46–78 units) shows the equipped cube, player name, and Lucide
+chevron inside the existing 15-unit bar. An 84 by 90-unit charcoal panel drops
+below it, with a player-tinted avatar/name header and icon-led Profile, Icon Kit, and Account rows.
 Use the native GD destinations. Outside clicks dismiss and are consumed.
 Modal dialogs take priority; live top-bar rebuilds wait while the dropdown or
 a profile touch is active. Reference: local GD Lazer account-card interaction,
