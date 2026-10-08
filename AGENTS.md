@@ -11,3 +11,6 @@
   local UI iteration. Native C++ and hook changes still require restarting GD.
 - Build and install updated native packages into the local Geode mods folder;
   distinguish compilation checks from confirmed in-game testing.
+
+- Persistent UI controls must use Geode OverlayManager. Do not add custom
+  CCDirector::drawScene hooks or scheduled callbacks just to keep a button visible.
