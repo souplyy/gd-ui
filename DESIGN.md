@@ -27,10 +27,15 @@ to modal dialogs. No frame hook or scheduled radial-menu callback.
 
 ## Profile dropdown
 
-The top-right 100-unit trigger shows the equipped cube, player name, and Lucide
-chevron inside the existing 15-unit bar. A 156 by 110-unit charcoal panel drops
+The top-right 86-unit trigger shows the equipped cube, player name, and Lucide
+chevron inside the existing 15-unit bar. A 132 by 88-unit charcoal panel drops
 below it, with a name header and View Profile, Icon Kit, and Account actions.
 Use the native GD destinations. Outside clicks dismiss and are consumed.
 Modal dialogs take priority; live top-bar rebuilds wait while the dropdown or
 a profile touch is active. Reference: local GD Lazer account-card interaction,
 with original compact styling and implementation for GD UI.
+
+Profile controls use 4-unit corner radii; the dropdown has an 8-unit radius.
+Open with a 10-unit downward slide over 140 ms using exponential ease-out;
+close upward over 90 ms with sine ease-in. Cancel old actions before toggling,
+disable rows while closing, and pause live rebuilds through the closing action.

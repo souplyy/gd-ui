@@ -15,10 +15,13 @@ private:
     void icons(cocos2d::CCObject*);
     void account(cocos2d::CCObject*);
     void close();
+    void finishClose();
     MenuLayer* m_owner = nullptr;
     cocos2d::CCNode* m_panel = nullptr;
     cocos2d::CCMenu* m_triggerControls = nullptr;
     cocos2d::CCMenu* m_panelControls = nullptr;
+    cocos2d::CCPoint m_panelHome;
+    bool m_animating = false;
     bool m_open = false;
 };
 }
