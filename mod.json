@@ -38,7 +38,8 @@
         "files": [
             "resources/ui.json",
             "resources/icons/LICENSE",
-            "resources/icons/settings.svg"
+            "resources/icons/settings.svg",
+            "resources/icons/settings.png"
         ]
     }
 }

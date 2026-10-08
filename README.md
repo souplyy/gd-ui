@@ -79,12 +79,12 @@ See [Geode reference notes](docs/geode-reference.md) for the documentation basel
 
 ## Live UI development
 
-The bar is now 20 logical units tall (previously 44), with a 12-unit Lucide
-settings icon. Lucide is the project's icon system; SVG source and the full
+The bar is now 15 logical units tall (previously 44), with an 11-unit Phosphor
+settings icon. Phosphor is the project's icon system; SVG source and the full
 license ship in `resources/icons`.
 
 After loading this version once, geometry, colors, spacing, and the settings
-icon's stroke data can refresh without restarting GD. Edit `resources/ui.json`.
+icon can refresh without restarting GD. Edit `resources/ui.json`.
 The mod checks `geode/config/souplyy.gd-ui/ui.json` every 0.5 seconds and updates
 the current main-menu bar. Invalid edits preserve the last working UI; active
 presses and popups delay refresh until they finish.
@@ -100,6 +100,8 @@ and publish it instead of rebuilding when the desired change is supported by
 its fields. Native C++ code, hooks, and new functionality still require a game
 restart: this does not hot-swap a loaded native library.
 
-To import another official Lucide icon, install `svgpathtools` in a development
-Python environment, run `scripts/import-icon.py <icon.svg> <output.json>`, and
-use the resulting paths in the UI data. The game needs no Python dependencies.
+To replace an icon, retain its official SVG in resources/icons/settings.svg,
+install `@resvg/resvg-js` in your development Node environment, and run
+`node scripts/render-icon.cjs`. This exports the original curves at 512×512,
+updates the icon revision, and lets the watcher publish the icon and UI data.
+The game needs no Node dependencies. Phosphor's MIT license ships with the mod.

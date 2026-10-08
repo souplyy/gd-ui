@@ -16,9 +16,17 @@ args = parser.parse_args()
 def publish():
     content = (root / 'resources/ui.json').read_text()
     data = json.loads(content)
-    if not (16 <= data['height'] <= 48 and 14 <= data['button_size'] <= data['height'] and 8 <= data['icon_size'] <= data['button_size']):
+    if not (10 <= data['height'] <= 48 and 10 <= data['button_size'] <= data['height'] and 8 <= data['icon_size'] <= data['button_size']):
         raise ValueError('Invalid toolbar dimensions')
     args.config_dir.mkdir(parents=True, exist_ok=True)
+    # Publish the high-resolution icon before its revision in the UI config.
+    with tempfile.NamedTemporaryFile(mode='wb', dir=args.config_dir, delete=False) as image:
+        image.write((root / 'resources/icons/settings.png').read_bytes())
+        staged_image = Path(image.name)
+    try:
+        os.replace(staged_image, args.config_dir / 'settings.png')
+    finally:
+        staged_image.unlink(missing_ok=True)
     with tempfile.NamedTemporaryFile(mode='w', dir=args.config_dir, delete=False) as output:
         output.write(content)
         staged = Path(output.name)

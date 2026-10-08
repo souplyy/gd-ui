@@ -1,5 +1,8 @@
 # Unreleased
 
+- Make the top bar 15 units tall.
+- Replace Lucide with the full-resolution Phosphor Gear Six icon.
+
 - Reduce the top bar to 20 units and switch to Lucide icons.
 - Add validated live UI data refresh and an automatic local publisher.
 

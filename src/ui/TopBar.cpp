@@ -2,7 +2,7 @@
 
 #include <Geode/utils/file.hpp>
 #include <cmath>
-#include <vector>
+#include <Geode/utils/string.hpp>
 
 using namespace geode::prelude;
 
@@ -43,24 +43,15 @@ namespace {
     }
 
     CCNode* settingsImage(float buttonSize, float iconSize, ccColor4B background,
-                          ccColor4B foreground, std::vector<std::vector<CCPoint>> const& paths) {
+                          ccColor4B foreground, CCTexture2D* texture) {
         auto image = CCNode::create();
         image->setContentSize({buttonSize, buttonSize});
         image->addChild(CCLayerColor::create(background, buttonSize, buttonSize));
-        auto icon = CCDrawNode::create();
-        auto ink = ccColor4F{foreground.r / 255.f, foreground.g / 255.f,
-                            foreground.b / 255.f, 1.f};
-        float scale = iconSize / 24.f;
-        float padding = (buttonSize - iconSize) / 2.f;
-        for (auto const& path : paths) {
-            for (size_t i = 1; i < path.size(); ++i) {
-                auto transform = [=](CCPoint p) {
-                    return CCPoint{padding + p.x * scale, padding + (24.f - p.y) * scale};
-                };
-                // Lucide's 2-unit stroke, round caps and joins.
-                icon->drawSegment(transform(path[i - 1]), transform(path[i]), scale, ink);
-            }
-        }
+        auto icon = CCSprite::createWithTexture(texture);
+        if (!icon) return nullptr;
+        icon->setColor({foreground.r, foreground.g, foreground.b});
+        icon->setScale(iconSize / icon->getContentSize().width);
+        icon->setPosition({buttonSize / 2.f, buttonSize / 2.f});
         image->addChild(icon);
         return image;
     }
@@ -73,37 +64,29 @@ bool gdui::TopBar::apply(std::string const& content) {
     auto const& config = parsed.unwrap();
     float height, button, icon, left;
     ccColor4B background, pressed, foreground, divider;
-    if (!number(config["height"], 16.f, 48.f, height) ||
-        !number(config["button_size"], 14.f, height, button) ||
+    if (!number(config["height"], 10.f, 48.f, height) ||
+        !number(config["button_size"], 10.f, height, button) ||
         !number(config["icon_size"], 8.f, button, icon) ||
         !number(config["left_padding"], 0.f, 48.f, left) ||
         !color(config["background"], background) || !color(config["pressed"], pressed) ||
         !color(config["foreground"], foreground) || !color(config["divider"], divider)) return false;
 
-    std::vector<std::vector<CCPoint>> paths;
-    auto input = config["settings_paths"].asArray();
-    if (!input || input.unwrap().empty() || input.unwrap().size() > 32) return false;
-    for (auto const& path : input.unwrap()) {
-        auto points = path.asArray();
-        if (!points || points.unwrap().size() < 2 || points.unwrap().size() > 512) return false;
-        std::vector<CCPoint> line;
-        for (auto const& point : points.unwrap()) {
-            auto xy = point.asArray();
-            float x, y;
-            if (!xy || xy.unwrap().size() != 2 ||
-                !number(xy.unwrap()[0], 0.f, 24.f, x) ||
-                !number(xy.unwrap()[1], 0.f, 24.f, y)) return false;
-            line.emplace_back(x, y);
-        }
-        paths.push_back(std::move(line));
-    }
+    auto iconPath = Mod::get()->getConfigDir() / "settings.png";
+    std::error_code error;
+    if (!std::filesystem::exists(iconPath, error))
+        iconPath = Mod::get()->getResourcesDir() / "settings.png";
+    auto filename = string::pathToString(iconPath);
+    auto cache = CCTextureCache::sharedTextureCache();
+    cache->removeTextureForKey(filename.c_str());
+    auto texture = cache->addImage(filename.c_str(), true);
+    if (!texture) return false;
 
     // Build the replacement before removing the working controls.
     auto controls = TopBarMenu::create();
     if (!controls) return false;
     auto settings = CCMenuItemSprite::create(
-        settingsImage(button, icon, background, foreground, paths),
-        settingsImage(button, icon, pressed, foreground, paths),
+        settingsImage(button, icon, background, foreground, texture),
+        settingsImage(button, icon, pressed, foreground, texture),
         m_owner, menu_selector(MenuLayer::onOptions)
     );
     if (!settings) return false;
