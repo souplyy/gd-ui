@@ -1,0 +1,7 @@
+/build*/
+/.cache/
+/cpm-cache/
+/.local/
+*.geode
+compile_commands.json
+.DS_Store

@@ -1,0 +1,27 @@
+{
+    "geode": "5.10.1",
+    "gd": {
+        "win": "2.2081",
+        "mac": "2.2081",
+        "android": "2.2081",
+        "ios": "2.2081"
+    },
+    "id": "souplyy.gd-ui",
+    "name": "GD UI",
+    "version": "v0.1.0",
+    "developer": "souplyy",
+    "description": "The foundation for a fresh Geometry Dash interface.",
+    "links": { "source": "https://github.com/souplyy/gd-ui" },
+    "issues": { "url": "https://github.com/souplyy/gd-ui/issues" },
+    "tags": ["interface", "offline"],
+    "dependencies": { "geode.node-ids": ">=v1.23.3" },
+    "settings": {
+        "enabled": {
+            "name": "Enable GD UI",
+            "description": "Show the GD UI button on the main menu. Restart the game after changing this setting.",
+            "type": "bool",
+            "default": true,
+            "requires-restart": true
+        }
+    }
+}

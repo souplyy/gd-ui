@@ -1,0 +1,52 @@
+name: Build Geode Mod
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+            target: Win64
+          - name: macOS
+            os: macos-latest
+            target: MacOS
+          - name: Android32
+            os: ubuntu-latest
+            target: Android32
+          - name: Android64
+            os: ubuntu-latest
+            target: Android64
+          - name: iOS
+            os: macos-latest
+            target: iOS
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build and package
+        uses: geode-sdk/build-geode-mod@main
+        with:
+          sdk: given
+          cli: v3.9.0
+          target: ${{ matrix.target }}
+          combine: true
+  package:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: geode-sdk/build-geode-mod/combine@main
+        id: combine
+      - uses: actions/upload-artifact@v7
+        with:
+          name: souplyy.gd-ui
+          path: ${{ steps.combine.outputs.build-output }}
