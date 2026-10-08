@@ -1,5 +1,8 @@
 # Unreleased
 
+- Reduce the top bar to 20 units and switch to Lucide icons.
+- Add validated live UI data refresh and an automatic local publisher.
+
 - Replace the starter button with a charcoal top bar and custom settings gear.
 - Open the game settings from the top-left button.
 

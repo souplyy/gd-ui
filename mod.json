@@ -33,5 +33,12 @@
             "default": true,
             "requires-restart": true
         }
+    },
+    "resources": {
+        "files": [
+            "resources/ui.json",
+            "resources/icons/LICENSE",
+            "resources/icons/settings.svg"
+        ]
     }
 }

@@ -76,3 +76,30 @@ submit anything to the Geode index. This is a local native mod, with no website
 or hosting service.
 
 See [Geode reference notes](docs/geode-reference.md) for the documentation baseline.
+
+## Live UI development
+
+The bar is now 20 logical units tall (previously 44), with a 12-unit Lucide
+settings icon. Lucide is the project's icon system; SVG source and the full
+license ship in `resources/icons`.
+
+After loading this version once, geometry, colors, spacing, and the settings
+icon's stroke data can refresh without restarting GD. Edit `resources/ui.json`.
+The mod checks `geode/config/souplyy.gd-ui/ui.json` every 0.5 seconds and updates
+the current main-menu bar. Invalid edits preserve the last working UI; active
+presses and popups delay refresh until they finish.
+
+```sh
+python3 scripts/publish-ui.py --watch
+```
+
+The publisher watches local UI edits and copies complete files atomically to
+this Mac's Steam GD install. Use `--config-dir <path>` for another installation.
+Run without `--watch` for one update. For future edits, update this data file
+and publish it instead of rebuilding when the desired change is supported by
+its fields. Native C++ code, hooks, and new functionality still require a game
+restart: this does not hot-swap a loaded native library.
+
+To import another official Lucide icon, install `svgpathtools` in a development
+Python environment, run `scripts/import-icon.py <icon.svg> <output.json>`, and
+use the resulting paths in the UI data. The game needs no Python dependencies.
